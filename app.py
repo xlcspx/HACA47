@@ -13,7 +13,7 @@ def perguntar_ollama(pergunta):
     try:
         # Envia a pergunta ao Ollama usando `ollama run`
         result = subprocess.run(
-            ["ollama", "run", "llama3.2"],  # Usando o nome correto do modelo
+            ["ollama", "run", "llama3.2"],  
             input=pergunta,
             capture_output=True,
             text=True,
