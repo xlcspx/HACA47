@@ -2,7 +2,7 @@ from flask import Flask, jsonify
 import sqlite3
 import subprocess
 
-app = Flask(__name__)
+app = Flask(_name_)
 
 # Função para buscar perguntas do banco
 def buscar_perguntas():
@@ -19,12 +19,18 @@ def buscar_perguntas():
 def perguntar_ollama(pergunta):
     try:
         result = subprocess.run(
-            ["ollama", "run", "llama3.2"],  
-            input=pergunta,
+            ["ollama", "run", "llama3.2"],
+            input=pergunta,  # Removido .encode("utf-8")
             capture_output=True,
-            text=True,
+            text=True,  # Garante que a entrada/saída sejam strings
+            encoding="utf-8",  # Força UTF-8
             check=True
         )
+
+        # Depuração: imprimir saída
+        print("STDOUT:", result.stdout)
+        print("STDERR:", result.stderr)
+
         return result.stdout.strip()
     except subprocess.CalledProcessError as e:
         return f"Erro ao executar Ollama: {e.stderr.strip()}"
@@ -48,5 +54,9 @@ def avaliar_respostas():
 
     return jsonify(resultados)
 
-if __name__ == '__main__':
+@app.route('/')
+def home():
+    return "<h1>API está rodando!</h1><p>Acesse <a href='/avaliar'>/avaliar</a> para ver as avaliações.</p>"
+
+if _name_ == '_main_':
     app.run(debug=True)
